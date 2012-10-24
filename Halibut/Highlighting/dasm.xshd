@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SyntaxDefinition name="DCPU-16 Assembly" extensions=".dasm;.dasm16;.dcpu" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="comment" foreground="#778899" fontStyle="italic" />
+  <Color name="instruction" foreground="#0000FF" />
+  <Color name="directive" foreground="#2E8B57" fontWeight="bold" />
+  <Color name="label" foreground="#4682B4" fontWeight="bold" />
+  <Color name="string" foreground="#F08080" />
+  <Color name="number" foreground="#5F9EA0" />
+  <Color name="register" foreground="#9932CC" />
+
+  <RuleSet>
+    <Span color="comment" begin=";" />
+    
+    <Span color="string">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <!-- nested span for escape sequences -->
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <Span color="string">
+      <Begin>'</Begin>
+      <End>'</End>
+      <RuleSet>
+        <!-- nested span for escape sequences -->
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <Span color="string">
+      <Begin>&lt;</Begin>
+      <End>&gt;</End>
+      <RuleSet>
+        <!-- nested span for escape sequences -->
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <Span color="label" begin="^[ \t]*\.?[A-Za-z_]+:" end="$"></Span>
+
+    <Span color="directive" begin="^[ \t]*#[A-Za-z]+" end="[ \t]"></Span>
+    <Span color="directive" begin="^[ \t]*\.[A-Za-z]+" end="[ \t]"></Span>
+
+    <Keywords color="instruction">
+      <Word>SET</Word>
+      <Word>ADD</Word>
+      <Word>SUB</Word>
+      <Word>MUL</Word>
+      <Word>MLI</Word>
+      <Word>DIV</Word>
+      <Word>MOD</Word>
+      <Word>MDI</Word>
+      <Word>AND</Word>
+      <Word>BOR</Word>
+      <Word>XOR</Word>
+      <Word>SHR</Word>
+      <Word>ASR</Word>
+      <Word>SHL</Word>
+      <Word>IFB</Word>
+      <Word>IFC</Word>
+      <Word>IFE</Word>
+      <Word>IFN</Word>
+      <Word>IFG</Word>
+      <Word>IFA</Word>
+      <Word>IFL</Word>
+      <Word>IFU</Word>
+      <Word>ADX</Word>
+      <Word>SBX</Word>
+      <Word>STI</Word>
+      <Word>STD</Word>
+      <Word>JSR</Word>
+      <Word>INT</Word>
+      <Word>IAG</Word>
+      <Word>IAS</Word>
+      <Word>RFI</Word>
+      <Word>IAQ</Word>
+      <Word>HWN</Word>
+      <Word>HWQ</Word>
+      <Word>HWI</Word>
+    </Keywords>
+
+    <Rule color="number">
+      \b-?0[xX][0-9a-fA-F]+  # hex number
+      |    \b
+      \b-?0[bB][0-1]+  # binary number
+      |    \b
+      \b-?0[oO][0-8]+  # octal number
+      |    \b
+      \b-?0[dD][0-9]+  # decimal number
+      |    \b
+      \b-?[0-9]+  # plain old number
+    </Rule>
+
+    <Keywords color="register">
+      <Word>A</Word>
+      <Word>B</Word>
+      <Word>C</Word>
+      <Word>X</Word>
+      <Word>Y</Word>
+      <Word>Z</Word>
+      <Word>I</Word>
+      <Word>J</Word>
+      <Word>PC</Word>
+      <Word>SP</Word>
+      <Word>PEEK</Word>
+      <Word>PUSH</Word>
+      <Word>POP</Word>
+    </Keywords>
+  </RuleSet>
+</SyntaxDefinition>

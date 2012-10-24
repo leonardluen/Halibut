@@ -1,0 +1,34 @@
+﻿<Window x:Class="Halibut.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ad="clr-namespace:AvalonDock;assembly=AvalonDock" xmlns:Halibut="clr-namespace:Halibut" Title="Halibut" Height="500" Width="700">
+    <Window.CommandBindings>
+        <CommandBinding Command="Save" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed"></CommandBinding>
+        <CommandBinding Command="Halibut:Commands.Exit" Executed="ExitCommand_Executed"></CommandBinding>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Key="S" Modifiers="Control" Command="Save"></KeyBinding>
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <!--Main menu-->
+        <Menu x:Name="mainMenu">
+            <MenuItem Header="File">
+                <MenuItem Header="New" Command="New"></MenuItem>
+                <MenuItem Header="Open" Command="Open"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Close" Command="Close"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Save" Command="Save"></MenuItem>
+                <MenuItem Header="Save As..." Command="SaveAs"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Exit" Command="Halibut:Commands.Exit"></MenuItem>
+            </MenuItem>
+        </Menu>
+        <!--Docking interface-->
+        <ad:DockingManager x:Name="dockingManager" Grid.Row="1"></ad:DockingManager>
+    </Grid>
+</Window>

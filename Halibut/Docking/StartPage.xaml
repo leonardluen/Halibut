@@ -1,0 +1,9 @@
+﻿<ad:DockableContent x:Class="Halibut.Docking.StartPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ad="clr-namespace:AvalonDock;assembly=AvalonDock"
+        Title="StartPage" Height="500" Width="700">
+    <Grid>
+        
+    </Grid>
+</ad:DockableContent>

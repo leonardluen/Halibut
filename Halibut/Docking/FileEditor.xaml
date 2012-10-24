@@ -1,0 +1,10 @@
+﻿<AvalonDock:DockableContent x:Class="Halibut.Docking.FileEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ae="clr-namespace:ICSharpCode.AvalonEdit;assembly=ICSharpCode.AvalonEdit"
+        xmlns:AvalonDock="clr-namespace:AvalonDock;assembly=AvalonDock" Title="FileEditor" Height="500" Width="700">
+    <Grid>
+        <ae:TextEditor x:Name="textEditor" FontSize="12" ShowLineNumbers="true"
+                       TextChanged="textEditor_TextChanged"></ae:TextEditor>
+    </Grid>
+</AvalonDock:DockableContent>

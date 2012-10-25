@@ -2,8 +2,15 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ad="clr-namespace:AvalonDock;assembly=AvalonDock"
-        xmlns:Halibut="clr-namespace:Halibut"
+        xmlns:Halibut="clr-namespace:Halibut" Background="#bbb"
         Title="Halibut" Height="600" Width="900">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/Default.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="Save" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed"></CommandBinding>
         <CommandBinding Command="Open" Executed="OpenCommand_Executed"></CommandBinding>
@@ -22,7 +29,7 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <!--Main menu-->
-        <Menu x:Name="mainMenu">
+        <Menu x:Name="mainMenu" Background="{StaticResource dimBrush}" Foreground="{StaticResource darkBrush}">
             <MenuItem Header="File">
                 <MenuItem Header="New">
                     <MenuItem Header="File" Command="New"></MenuItem>
@@ -37,6 +44,13 @@
                 <Separator></Separator>
                 <MenuItem Header="Exit" Command="Halibut:Commands.Exit"></MenuItem>
             </MenuItem>
+            <MenuItem Header="Edit"></MenuItem>
+            <MenuItem Header="View"></MenuItem>
+            <MenuItem Header="Debug"></MenuItem>
+            <MenuItem Header="Git"></MenuItem>
+            <MenuItem Header="Tools"></MenuItem>
+            <MenuItem Header="Window"></MenuItem>
+            <MenuItem Header="Help"></MenuItem>
         </Menu>
         <!--Docking interface-->
         <ad:DockingManager x:Name="dockingManager" Grid.Row="1"></ad:DockingManager>

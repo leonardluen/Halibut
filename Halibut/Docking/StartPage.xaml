@@ -3,7 +3,27 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ad="clr-namespace:AvalonDock;assembly=AvalonDock"
         Title="StartPage" Height="500" Width="700">
+    <ad:DockableContent.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/Default.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ad:DockableContent.Resources>
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid Style="{StaticResource ResourceKey=startPageSide}">
+            <Grid Margin="5">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Style="{StaticResource ResourceKey=pageTitle}">Halibut</TextBlock>
+                </StackPanel>
+            </Grid>
+        </Grid>
+        <Grid Grid.Column="1" Background="White">
+            <Grid Margin="5"></Grid>
+        </Grid>
     </Grid>
 </ad:DockableContent>

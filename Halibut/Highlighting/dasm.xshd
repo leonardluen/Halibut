@@ -8,7 +8,7 @@
   <Color name="number" foreground="#5F9EA0" />
   <Color name="register" foreground="#9932CC" />
 
-  <RuleSet>
+  <RuleSet ignoreCase="true">
     <Span color="comment" begin=";" />
     
     <Span color="string">

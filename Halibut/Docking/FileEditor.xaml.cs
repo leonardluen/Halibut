@@ -31,6 +31,8 @@ namespace Halibut.Docking
         {
             HighlightingManager.Instance.RegisterHighlighting("DCPU-16 Assembly", new[] { ".dasm", ".dasm16", ".dcpu", ".dcpu16" },
                 HighlightingLoader.Load(FromResource("Halibut.Highlighting.dasm.xshd"), HighlightingManager.Instance));
+            HighlightingManager.Instance.RegisterHighlighting("Markdown", new[] { ".md", ".markdown", ".mkdown" },
+                HighlightingLoader.Load(FromResource("Halibut.Highlighting.markdown.xshd"), HighlightingManager.Instance));
         }
 
         private static XmlReader FromResource(string resource)

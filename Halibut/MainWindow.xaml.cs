@@ -32,7 +32,7 @@ namespace Halibut
 
         public void OpenFile(string path)
         {
-            if (DataUtility.IsPlaintext(path))
+            if (path == null || DataUtility.IsPlaintext(path))
             {
                 var editor = new FileEditor(path);
                 editor.ShowAsDocument(dockingManager);
@@ -73,6 +73,17 @@ namespace Halibut
         #region Commands
         // TODO: Consider splitting this into another file
 
+        private void NewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            // Open empty file
+            OpenFile(null);
+        }
+
+        private void NewProjectCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+
         private void SaveCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = dockingManager.ActiveDocument is IDirtiedWindow;
@@ -81,6 +92,16 @@ namespace Halibut
         private void SaveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             (dockingManager.ActiveDocument as IDirtiedWindow).Save();
+        }
+
+        private void CloseCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = dockingManager.ActiveDocument != null;
+        }
+
+        private void CloseCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            dockingManager.ActiveDocument.Close();
         }
 
         private void OpenCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -103,5 +124,6 @@ namespace Halibut
     public static class Commands
     {
         public static readonly RoutedUICommand Exit = new RoutedUICommand("Exit Application", "Exit", typeof(MainWindow));
+        public static readonly RoutedUICommand NewProject = new RoutedUICommand("New Project", "NewProject", typeof(MainWindow));
     }
 }

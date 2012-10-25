@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SyntaxDefinition name="Markdown" extensions=".md;.markdown;.mkdown" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+    <RuleSet>
+        <Span fontSize="24" begin="#" />
+    </RuleSet>
+</SyntaxDefinition>

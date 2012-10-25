@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Halibut.Docking;
+using Microsoft.Win32;
 
 namespace Halibut
 {
@@ -30,6 +31,21 @@ namespace Halibut
             file.ShowAsDocument(dockingManager);
             Closing += OnClosing;
         }
+
+        public void OpenFile(string path)
+        {
+            if (DataUtility.IsPlaintext(path))
+            {
+                var editor = new FileEditor(path);
+                editor.ShowAsDocument(dockingManager);
+            }
+            else
+            {
+                // TODO: Raw data editor
+            }
+        }
+
+        #region Event Handlers
 
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
@@ -54,6 +70,11 @@ namespace Halibut
             }
         }
 
+        #endregion
+
+        #region Commands
+        // TODO: Consider splitting this into another file
+
         private void SaveCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = dockingManager.ActiveDocument is IDirtiedWindow;
@@ -64,10 +85,21 @@ namespace Halibut
             (dockingManager.ActiveDocument as IDirtiedWindow).Save();
         }
 
+        private void OpenCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog();
+            dialog.Filter = FileEditor.FileFilter;
+            if (!dialog.ShowDialog().Value)
+                return;
+            OpenFile(dialog.FileName);
+        }
+
         private void ExitCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             this.Close();
         }
+
+        #endregion
     }
 
     public static class Commands

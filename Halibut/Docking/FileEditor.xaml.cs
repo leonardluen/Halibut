@@ -16,6 +16,7 @@ using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using System.Xml;
 using System.Reflection;
 using Microsoft.Win32;
+using System.ComponentModel;
 
 namespace Halibut.Docking
 {
@@ -24,7 +25,7 @@ namespace Halibut.Docking
     /// </summary>
     public partial class FileEditor : DockableContent, IDirtiedWindow
     {
-        private const string NewFileSaveFilter = "DCPU-16 Assembly (*.dasm)|*.dasm|All files (*.*)|*.*";
+        public const string FileFilter = "DCPU-16 Assembly (*.dasm)|*.dasm|All files (*.*)|*.*";
 
         static FileEditor()
         {
@@ -63,10 +64,11 @@ namespace Halibut.Docking
                 Title = Path.GetFileName(file);
             }
             else
-            {
                 Title = "New File";
-            }
             IsDirty = false;
+            this.IsCloseable = true;
+            this.HideOnClose = false;
+            Closing += FileEditor_Closing;
         }
 
         public void Save()
@@ -75,7 +77,7 @@ namespace Halibut.Docking
             if (FileName == null)
             {
                 var dialog = new SaveFileDialog();
-                dialog.Filter = NewFileSaveFilter;
+                dialog.Filter = FileFilter;
                 if (!dialog.ShowDialog().Value)
                     return;
                 FileName = dialog.FileName;
@@ -91,6 +93,17 @@ namespace Halibut.Docking
         {
             IsDirty = true;
             Title = ObjectName + "*";
+        }
+
+        private void FileEditor_Closing(object sender, CancelEventArgs e)
+        {
+            if (IsDirty)
+            {
+                var result = MessageBox.Show(ObjectName + " has been modified! Are you sure you wish to discard your changes?",
+                    "Warning", MessageBoxButton.YesNoCancel);
+                if (result != MessageBoxResult.Yes)
+                    e.Cancel = true;
+            }
         }
     }
 }

@@ -45,14 +45,17 @@ namespace Halibut
             var config = new EnviornmentConfiguration();
             using (StreamReader reader = new StreamReader(file))
             {
-                string line = reader.ReadLine().Trim();
-                if (line.StartsWith('#'))
-                    continue;
-                if (string.IsNullOrEmpty(line))
-                    continue;
-                string key = line.Remove(line.IndexOf('='));
-                string value = line.Substring(line.IndexOf('=') + 1);
-                config[key] = value;
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine().Trim();
+                    if (line.StartsWith("#"))
+                        continue;
+                    if (string.IsNullOrEmpty(line))
+                        continue;
+                    string key = line.Remove(line.IndexOf('='));
+                    string value = line.Substring(line.IndexOf('=') + 1);
+                    config[key] = value;
+                }
             }
             return config;
         }

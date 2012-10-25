@@ -27,8 +27,6 @@ namespace Halibut
             InitializeComponent();
             var startPage = new StartPage();
             startPage.ShowAsDocument(dockingManager);
-            var file = new FileEditor(null);
-            file.ShowAsDocument(dockingManager);
             Closing += OnClosing;
         }
 

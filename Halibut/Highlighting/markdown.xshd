@@ -1,6 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <SyntaxDefinition name="Markdown" extensions=".md;.markdown;.mkdown" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
     <RuleSet>
-        <Span fontSize="24" begin="#" />
+        <Span fontSize="16" foreground="Black" begin="####" />
+        <Span fontSize="18" foreground="Black" begin="###" />
+        <Span fontSize="20" foreground="Black" begin="##" />
+        <Span fontSize="24" foreground="Black" begin="#" />
+        <Span foreground="#6633FF" begin="[+*-] "></Span>
+        <Span foreground="#6633FF" begin="[0-9]+\. "></Span>
+        <Span fontWeight="bold" begin="\*\*" end="\*\*"></Span>
+        <Span fontStyle="italic" begin="\*" end="\*"></Span>
+        <Span fontWeight="bold" begin="__" end="__"></Span>
+        <Span fontStyle="italic" begin="_" end="_"></Span>
+        <Rule foreground="Blue">
+            \[.*\]\(
+            (?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()&lt;>]+|\(([^\s()&lt;>]+|(\([^\s()&lt;>]+\)))*\))+(?:\(([^\s()&lt;>]+|(\([^\s()&lt;>]+\)))*\)|[^\s`!()\[\]{};:'".,&lt;>?«»“”‘’]))
+            \)</Rule>
+        <Span foreground="Gray" begin="&gt; "></Span>
+        <Span foreground="DarkBlue" begin="^    .+"></Span>
     </RuleSet>
 </SyntaxDefinition>

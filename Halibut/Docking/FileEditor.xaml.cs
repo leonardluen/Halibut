@@ -62,6 +62,8 @@ namespace Halibut.Docking
             {
                 textEditor.SyntaxHighlighting =
                     HighlightingManager.Instance.GetDefinitionByExtension(Path.GetExtension(file));
+                var ext = Path.GetExtension(FileName);
+                textEditor.WordWrap = ext == ".md" || ext == ".markdown" || ext == ".mkdown";
                 textEditor.Document.Text = File.ReadAllText(file);
                 Title = Path.GetFileName(file);
             }
@@ -85,6 +87,8 @@ namespace Halibut.Docking
                 FileName = dialog.FileName;
                 textEditor.SyntaxHighlighting =
                     HighlightingManager.Instance.GetDefinitionByExtension(Path.GetExtension(FileName));
+                var ext = Path.GetExtension(FileName);
+                textEditor.WordWrap = ext == "md" || ext == "markdown" || ext == "mkdown";
             }
             File.WriteAllText(FileName, textEditor.Text);
             IsDirty = false;

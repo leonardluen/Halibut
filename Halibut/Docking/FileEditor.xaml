@@ -4,7 +4,7 @@
         xmlns:ae="clr-namespace:ICSharpCode.AvalonEdit;assembly=ICSharpCode.AvalonEdit"
         xmlns:AvalonDock="clr-namespace:AvalonDock;assembly=AvalonDock" Title="FileEditor" Height="500" Width="700">
     <Grid>
-        <ae:TextEditor x:Name="textEditor" FontSize="12" ShowLineNumbers="true"
+        <ae:TextEditor x:Name="textEditor" FontSize="12" ShowLineNumbers="true" 
                        TextChanged="textEditor_TextChanged"></ae:TextEditor>
     </Grid>
 </AvalonDock:DockableContent>

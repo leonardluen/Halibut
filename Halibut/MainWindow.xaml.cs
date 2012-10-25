@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AvalonDock;
 using Halibut.Docking;
 using Microsoft.Win32;
 
@@ -28,6 +29,8 @@ namespace Halibut
             var startPage = new StartPage();
             startPage.ShowAsDocument(dockingManager);
             Closing += OnClosing;
+            var terminal = new Terminal();
+            terminal.Show(dockingManager, AnchorStyle.Bottom);
         }
 
         public void OpenFile(string path)
@@ -125,5 +128,6 @@ namespace Halibut
     {
         public static readonly RoutedUICommand Exit = new RoutedUICommand("Exit Application", "Exit", typeof(MainWindow));
         public static readonly RoutedUICommand NewProject = new RoutedUICommand("New Project", "NewProject", typeof(MainWindow));
+        public static readonly RoutedUICommand OpenProject = new RoutedUICommand("Open Project", "OpenProject", typeof(MainWindow));
     }
 }

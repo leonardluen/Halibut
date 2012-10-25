@@ -73,6 +73,11 @@ namespace Halibut.Docking
             this.IsCloseable = true;
             this.HideOnClose = false;
             Closing += FileEditor_Closing;
+            // TODO: Allow customization
+            textEditor.Options.ConvertTabsToSpaces = true;
+            textEditor.Options.AllowScrollBelowDocument = true;
+            textEditor.Options.EnableRectangularSelection = true;
+            textEditor.Options.IndentationSize = 4;
         }
 
         public void Save()

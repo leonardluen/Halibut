@@ -1,0 +1,31 @@
+﻿<ae:DockableContent x:Class="Halibut.Docking.Terminal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ae="clr-namespace:AvalonDock;assembly=AvalonDock"
+        Title="Terminal" Height="300" Width="700">
+    <ae:DockableContent.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/Default.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ae:DockableContent.Resources>
+    <Grid Background="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ScrollViewer x:Name="scrollViewer" HorizontalScrollBarVisibility="Disabled"
+                      FontFamily="Courier New" VerticalScrollBarVisibility="Auto">
+            <ListView Background="Transparent" Foreground="White" FontFamily="Courier New" x:Name="outputView">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"></TextBlock>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
+        <TextBox x:Name="textBox" FontFamily="Courier New" Grid.Row="1"
+                 Style="{StaticResource terminalTextBox}" KeyDown="TextBoxKeyDown"></TextBox>
+    </Grid>
+</ae:DockableContent>

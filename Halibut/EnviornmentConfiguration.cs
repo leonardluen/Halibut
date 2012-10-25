@@ -22,6 +22,8 @@ namespace Halibut
 
         public void Save()
         {
+            if (File == null)
+                throw new InvalidOperationException("Configuration only exists in memory, use Save(string)");
             Save(File);
         }
 
@@ -36,6 +38,23 @@ namespace Halibut
                     writer.WriteLine(pair.Key + "=" + pair.Value);
                 writer.Close();
             }
+        }
+
+        public static EnviornmentConfiguration Load(string file)
+        {
+            var config = new EnviornmentConfiguration();
+            using (StreamReader reader = new StreamReader(file))
+            {
+                string line = reader.ReadLine().Trim();
+                if (line.StartsWith('#'))
+                    continue;
+                if (string.IsNullOrEmpty(line))
+                    continue;
+                string key = line.Remove(line.IndexOf('='));
+                string value = line.Substring(line.IndexOf('=') + 1);
+                config[key] = value;
+            }
+            return config;
         }
 
         public string this[string key]

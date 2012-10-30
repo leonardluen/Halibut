@@ -23,14 +23,15 @@ namespace Halibut
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static MainWindow Instance { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
             var startPage = new StartPage();
             startPage.ShowAsDocument(dockingManager);
             Closing += OnClosing;
-            var terminal = new Terminal();
-            terminal.Show(dockingManager, AnchorStyle.Bottom);
+            Instance = this;
         }
 
         public void OpenFile(string path)
@@ -84,7 +85,9 @@ namespace Halibut
 
         private void NewProjectCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-
+            var window = new NewProjectWindow();
+            if (!window.ShowDialog().Value)
+                return;
         }
 
         private void SaveCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)

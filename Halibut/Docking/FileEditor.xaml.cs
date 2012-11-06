@@ -78,6 +78,34 @@ namespace Halibut.Docking
             textEditor.Options.AllowScrollBelowDocument = true;
             textEditor.Options.EnableRectangularSelection = true;
             textEditor.Options.IndentationSize = 4;
+
+            textEditor.PreviewMouseWheel += textEditor_PreviewMouseWheel;
+            textEditor.PreviewKeyDown += textEditor_PreviewKeyDown;
+            textEditor.PreviewKeyUp += textEditor_PreviewKeyUp;
+        }
+
+        bool isCtrlPressed = false;
+        void textEditor_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            if (isCtrlPressed && e.Key == Key.RightCtrl || e.Key == Key.LeftCtrl)
+                isCtrlPressed = false;
+        }
+
+        void textEditor_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            isCtrlPressed = e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl;
+        }
+
+        void textEditor_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (isCtrlPressed)
+            {
+                if (e.Delta > 0 && textEditor.FontSize < 120)
+                    textEditor.FontSize++;
+                else if (e.Delta < 0 && textEditor.FontSize > 8)
+                    textEditor.FontSize--;
+                e.Handled = true;
+            }
         }
 
         public void Save()

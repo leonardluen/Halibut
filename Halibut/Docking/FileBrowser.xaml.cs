@@ -10,8 +10,8 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using AvalonDock;
+using ICSharpCode.AvalonEdit.Highlighting;
 
 namespace Halibut.Docking
 {
@@ -20,16 +20,100 @@ namespace Halibut.Docking
     /// </summary>
     public partial class FileBrowser : DockableContent
     {
+        public event EventHandler<OpenFileEventArgs> OpenFile;
+
         public string RootDirectory { get; set; }
 
         public FileBrowser(string root)
         {
             InitializeComponent();
+            RootDirectory = root;
+            fileTree.Items.Add(RepopulateContents(RootDirectory));
+            FileSystemWatcher fsWatcher = new FileSystemWatcher(RootDirectory);
+            fsWatcher.IncludeSubdirectories = true;
+            fsWatcher.Renamed += (s, e) => RepopulateContents(RootDirectory);
+            fsWatcher.Created += (s, e) => RepopulateContents(RootDirectory);
+            fsWatcher.Deleted += (s, e) => RepopulateContents(RootDirectory);
         }
 
-        public void RepopulateContents()
+        public TreeViewItem RepopulateContents(string directory)
         {
-            var directories = Directory.GetDirectories(RootDirectory, null, SearchOption.AllDirectories);
+            // TODO: Load on demand
+            // TODO: .gitignore?
+            var directories = Directory.GetDirectories(directory).Where(d => !Path.GetFileName(d).StartsWith("."));
+            var files = Directory.GetFiles(directory).Where(f => !Path.GetFileName(f).StartsWith("."));
+            var node = GenerateFolderNode(directory);
+            if (directories.Count() != 0)
+            {
+                foreach (var dir in directories)
+                    node.Items.Add(RepopulateContents(dir));
+            }
+            foreach (var file in files)
+                node.Items.Add(GenerateFileNode(file));
+            return node;
+        }
+
+        private object GenerateFileNode(string file)
+        {
+            StackPanel panel = new StackPanel();
+            panel.Orientation = Orientation.Horizontal;
+            if (HighlightingManager.Instance.GetDefinitionByExtension(Path.GetExtension(file)) != null)
+            {
+                panel.Children.Add(new Image
+                {
+                    Source = new BitmapImage(new Uri("pack://application:,,,/Images/code-file.png")) // TODO: Grab associated icon and use it instead
+                });
+            }
+            else
+            {
+                panel.Children.Add(new Image
+                {
+                    Source = new BitmapImage(new Uri("pack://application:,,,/Images/file.png")) // TODO: Grab associated icon and use it instead
+                });
+            }
+            panel.Children.Add(new Label()
+            {
+                Content = Path.GetFileName(file)
+            });
+            TreeViewItem item = new TreeViewItem();
+            item.Header = panel;
+            item.Tag = file;
+            item.MouseDoubleClick += file_MouseDoubleClick;
+            return item;
+        }
+
+        void file_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var item = sender as TreeViewItem;
+            string file = item.Tag as string;
+            var args = new OpenFileEventArgs
+            {
+                File = file
+            };
+            if (OpenFile != null)
+                OpenFile(this, args);
+        }
+
+        private TreeViewItem GenerateFolderNode(string name)
+        {
+            StackPanel panel = new StackPanel();
+            panel.Orientation = Orientation.Horizontal;
+            panel.Children.Add(new Image
+            {
+                Source = new BitmapImage(new Uri("pack://application:,,,/Images/folder.png"))
+            });
+            panel.Children.Add(new Label()
+            {
+                Content = Path.GetFileName(name) // technically is a directory name, but usually works anyway
+            });
+            TreeViewItem item = new TreeViewItem();
+            item.Header = panel;
+            return item;
+        }
+
+        public class OpenFileEventArgs : EventArgs
+        {
+            public string File { get; set; }
         }
     }
 }

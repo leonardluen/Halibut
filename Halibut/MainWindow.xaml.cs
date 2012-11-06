@@ -25,6 +25,7 @@ namespace Halibut
     {
         public static MainWindow Instance { get; set; }
         public static string UserPath { get; private set; }
+        public Project CurrentProject { get; private set; }
 
         private StartPage StartPage { get; set; }
 
@@ -46,12 +47,24 @@ namespace Halibut
             Directory.CreateDirectory(Path.Combine(UserPath, "Projects"));
             Directory.CreateDirectory(Path.Combine(UserPath, "Templates"));
             Directory.CreateDirectory(Path.Combine(UserPath, "Settings"));
+            CurrentProject = null;
         }
 
         public void OpenFile(string path)
         {
             if (path == null || DataUtility.IsPlaintext(path))
             {
+                if (path != null)
+                {
+                    foreach (FileEditor item in dockingManager.DockableContents.Where(d => d is FileEditor))
+                    {
+                        if (item.FileName == path)
+                        {
+                            item.Focus();
+                            return;
+                        }
+                    }
+                }
                 var editor = new FileEditor(path);
                 editor.ShowAsDocument(dockingManager);
             }
@@ -59,6 +72,18 @@ namespace Halibut
             {
                 // TODO: Raw data editor
             }
+        }
+
+        /// <summary>
+        /// Opens a project and adjusts the enviornment to use it.
+        /// </summary>
+        public void IntegrateProject(Project project)
+        {
+            var browser = new FileBrowser(project.RootDirectory);
+            browser.Show(dockingManager, AnchorStyle.Right);
+            browser.OpenFile += (s, e) => OpenFile(e.File);
+            CurrentProject = project;
+            StartPage.Close();
         }
 
         #region Event Handlers
@@ -108,7 +133,7 @@ namespace Halibut
             // Open files
             foreach (var file in template.TemplateFiles.Where(f => f.Open).OrderByDescending(f => f.Focused))
                 OpenFile(Path.Combine(project.RootDirectory, template.DoReplacements(window.ProjectName, file.FileName)));
-            StartPage.Close();
+            IntegrateProject(project);
         }
 
         private void SaveCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)

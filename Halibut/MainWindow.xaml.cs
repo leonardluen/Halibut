@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using AvalonDock;
 using Halibut.Docking;
 using Microsoft.Win32;
+using System.Text.RegularExpressions;
 
 namespace Halibut
 {
@@ -29,6 +30,7 @@ namespace Halibut
 
         private StartPage StartPage { get; set; }
         private OutputWindow OutputWindow { get; set; }
+        private ErrorWindow ErrorWindow { get; set; }
 
         public MainWindow()
         {
@@ -37,12 +39,14 @@ namespace Halibut
             StartPage = new StartPage();
             StartPage.ShowAsDocument(dockingManager);
             OutputWindow = new OutputWindow();
+            ErrorWindow = new ErrorWindow();
             Closing += OnClosing;
             Instance = this;
         }
 
         private void InitializeEnviornment()
         {
+            FileEditor.Initialize();
             UserPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             UserPath = Path.Combine(UserPath, "Halibut");
             Directory.CreateDirectory(UserPath);
@@ -153,6 +157,7 @@ namespace Halibut
 
         private void BuildProjectCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            Commands.SaveAll.Execute(null, this);
             if (!CurrentProject.ContainsKey("build"))
             {
                 MessageBox.Show("No build action specified in project configuration.",
@@ -161,11 +166,37 @@ namespace Halibut
                 return;
             }
             OutputWindow.Show(dockingManager, AnchorStyle.Bottom);
-            OutputWindow.RunCommand(CurrentProject["build"], CurrentProject.RootDirectory, success =>
+            OutputWindow.RunCommand(CurrentProject["build"], CurrentProject.RootDirectory, result =>
                 {
                     Dispatcher.BeginInvoke(new Action(() =>
                         {
-                            // TODO
+                            if (result.ReturnCode == 0)
+                                statusText.Text = "Build suceeded";
+                            else
+                                statusText.Text = "Build failed";
+                            if (CurrentProject.ContainsKey("error-regex"))
+                            {
+                                var errorRegex = new Regex(CurrentProject["error-regex"]);
+                                var matches = errorRegex.Matches(result.Output);
+                                var errors = new List<BuildError>();
+                                foreach (var match in matches)
+                                {
+                                    var error = new BuildError();
+                                    var item = errorRegex.Match(match.ToString());
+                                    if (item.Groups["file"] != null)
+                                        error.File = item.Groups["file"].Value.Replace("\r", "");
+                                    if (item.Groups["error"] != null)
+                                        error.Error = item.Groups["error"].Value.Replace("\r", "");
+                                    if (item.Groups["line"] != null)
+                                        error.LineNumber = int.Parse(item.Groups["line"].Value);
+                                    errors.Add(error);
+                                }
+                                if (errors.Count != 0)
+                                {
+                                    ErrorWindow.DataContext = errors;
+                                    ErrorWindow.Show(dockingManager, AnchorStyle.Bottom);
+                                }
+                            }
                         }));
                 });
         }
@@ -218,5 +249,6 @@ namespace Halibut
         public static readonly RoutedUICommand NewProject = new RoutedUICommand("New Project", "NewProject", typeof(MainWindow));
         public static readonly RoutedUICommand OpenProject = new RoutedUICommand("Open Project", "OpenProject", typeof(MainWindow));
         public static readonly RoutedUICommand BuildProject = new RoutedUICommand("Build Project", "BuildProject", typeof(MainWindow));
+        public static readonly RoutedUICommand SaveAll = new RoutedUICommand("Save All", "SaveAll", typeof(MainWindow));
     }
 }

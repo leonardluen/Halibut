@@ -26,6 +26,14 @@ namespace Halibut.Docking
             InitializeComponent();
         }
 
+        public void Clear()
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    output.Text = "";
+                }));
+        }
+
         public void AddOutput(string text)
         {
             Dispatcher.BeginInvoke(new Action(() =>
@@ -44,14 +52,18 @@ namespace Halibut.Docking
             }));
         }
 
-        public void RunCommand(string command, string workingDirectory, Action<bool> callback)
+        public void RunCommand(string command, string workingDirectory, Action<CommandResult> callback)
         {
+            Clear();
             Task.Factory.StartNew(() =>
                 {
                     try
                     {
                         var startInfo = new ProcessStartInfo();
-                        startInfo.FileName = command.Remove(command.SafeIndexOf(' '));
+                        if (!command.Contains(' '))
+                            startInfo.FileName = command;
+                        else
+                            startInfo.FileName = command.Remove(command.IndexOf(' '));
                         if (!File.Exists(startInfo.FileName))
                         {
                             if (File.Exists(Path.Combine(workingDirectory, startInfo.FileName)))
@@ -70,25 +82,38 @@ namespace Halibut.Docking
                                 }
                             }
                         }
-                        startInfo.Arguments = command.Substring(command.SafeIndexOf(' ') + 1);
+                        if (command.Contains(' '))
+                            startInfo.Arguments = command.Substring(command.SafeIndexOf(' ') + 1);
                         startInfo.UseShellExecute = false;
                         startInfo.RedirectStandardOutput = true;
                         startInfo.RedirectStandardError = true;
                         startInfo.WorkingDirectory = workingDirectory;
                         startInfo.CreateNoWindow = true;
                         var process = Process.Start(startInfo);
+                        // TODO: Output as data comes in
                         string error = process.StandardError.ReadToEnd();
                         string output = process.StandardOutput.ReadToEnd();
                         process.WaitForExit();
                         AddOutput(output);
                         AddOutput(error);
                         if (callback != null)
-                            callback(process.ExitCode == 0);
+                        {
+                            callback(new CommandResult
+                                {
+                                    Output = error + Environment.NewLine + output,
+                                    ReturnCode = process.ExitCode
+                                });
+                        }
                     }
                     catch (Exception e)
                     {
                         if (callback != null)
-                            callback(false);
+                        {
+                            callback(new CommandResult
+                            {
+                                ReturnCode = 1
+                            });
+                        }
                         AddOutputLine("Exception occured:");
                         AddOutputLine("Could not execute " + command);
                         AddOutput(e.ToString());
@@ -111,6 +136,12 @@ namespace Halibut.Docking
         {
             if (e.Key.HasFlag(Key.LeftCtrl) || e.Key.HasFlag(Key.RightCtrl))
                 controlDown = false;
+        }
+
+        public class CommandResult
+        {
+            public int ReturnCode { get; set; }
+            public string Output { get; set; }
         }
     }
 }

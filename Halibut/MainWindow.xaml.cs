@@ -106,7 +106,7 @@ namespace Halibut
             var name = window.ProjectName;
             var project = template.Create(window.ProjectName, Path.Combine(window.ProjectDirectory, name));
             // Open files
-            foreach (var file in template.TemplateFiles.Where(f => f.Open).OrderBy(f => f.Focused))
+            foreach (var file in template.TemplateFiles.Where(f => f.Open).OrderByDescending(f => f.Focused))
                 OpenFile(Path.Combine(project.RootDirectory, template.DoReplacements(window.ProjectName, file.FileName)));
             StartPage.Close();
         }

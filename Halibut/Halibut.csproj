@@ -63,6 +63,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Docking\FileBrowser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Docking\FileEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -88,6 +92,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataUtility.cs" />
+    <Compile Include="Docking\FileBrowser.xaml.cs">
+      <DependentUpon>FileBrowser.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Docking\FileEditor.xaml.cs">
       <DependentUpon>FileEditor.xaml</DependentUpon>
     </Compile>

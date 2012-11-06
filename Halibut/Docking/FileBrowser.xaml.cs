@@ -81,6 +81,7 @@ namespace Halibut.Docking
             item.Header = panel;
             item.Tag = file;
             item.MouseDoubleClick += file_MouseDoubleClick;
+            item.ContextMenu = (ContextMenu)Resources["fileContextMenu"];
             return item;
         }
 
@@ -116,6 +117,11 @@ namespace Halibut.Docking
         public class OpenFileEventArgs : EventArgs
         {
             public string File { get; set; }
+        }
+
+        private void contextMenuOpenClick(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

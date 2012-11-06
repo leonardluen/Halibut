@@ -3,9 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:AvalonDock="clr-namespace:AvalonDock;assembly=AvalonDock"
         Title="File Browser" Height="600" Width="300">
+    <AvalonDock:DockableContent.Resources>
+        <ContextMenu x:Key="fileContextMenu" x:Name="fileContextMenu">
+            <MenuItem Header="Open" Click="contextMenuOpenClick"></MenuItem>
+            <MenuItem Header="Open With..."></MenuItem>
+            <Separator></Separator>
+            <MenuItem Header="Cut"></MenuItem>
+            <MenuItem Header="Copy"></MenuItem>
+            <MenuItem Header="Rename"></MenuItem>
+            <MenuItem Header="Delete"></MenuItem>
+        </ContextMenu>
+    </AvalonDock:DockableContent.Resources>
     <Grid>
-        <TreeView x:Name="fileTree">
-            
-        </TreeView>
+        <TreeView x:Name="fileTree"></TreeView>
     </Grid>
 </AvalonDock:DockableContent>

@@ -22,5 +22,10 @@ namespace Halibut.Docking
         {
             InitializeComponent();
         }
+
+        public void AddOutput(string text)
+        {
+            output.Text += Environment.NewLine + text;
+        }
     }
 }

@@ -28,7 +28,9 @@ namespace Halibut.Docking
         {
             InitializeComponent();
             RootDirectory = root;
-            fileTree.Items.Add(RepopulateContents(RootDirectory));
+            var rootItem = RepopulateContents(RootDirectory);
+            rootItem.IsExpanded = true;
+            fileTree.Items.Add(rootItem);
             FileSystemWatcher fsWatcher = new FileSystemWatcher(RootDirectory);
             fsWatcher.IncludeSubdirectories = true;
             fsWatcher.Renamed += (s, e) => RepopulateContents(RootDirectory);

@@ -32,6 +32,7 @@ namespace Halibut
                 var open = file.Attribute("open");
                 var focus = file.Attribute("focus");
                 var template = file.Attribute("template");
+                var project = file.Attribute("project");
                 if (fileName == null || template == null)
                     throw new FileFormatException(Path.GetFileName(templateFile) + " is an invalid project template.");
                 var tFile = new TemplateFile();
@@ -42,6 +43,8 @@ namespace Halibut
                     tFile.Open = bool.Parse(open.Value);
                 if (focus != null)
                     tFile.Focused = bool.Parse(open.Value);
+                if (project != null)
+                    tFile.ProjectFile = bool.Parse(project.Value);
                 TemplateFiles.Add(tFile);
             }
         }
@@ -53,9 +56,8 @@ namespace Halibut
 
         public Project Create(string name, string directory)
         {
-            var project = new Project();
             Directory.CreateDirectory(directory);
-            project.RootDirectory = directory;
+            string projectFile = null;
             foreach (var file in TemplateFiles)
             {
                 string templateFile = file.Template;
@@ -65,12 +67,14 @@ namespace Halibut
                     templateFile = Path.GetFullPath(Path.Combine(TemplateDirectory, templateFile));
                 string template = File.ReadAllText(templateFile);
                 template = DoReplacements(name, template);
-                var output = Path.Combine(project.RootDirectory,
+                var output = Path.Combine(directory,
                     DoReplacements(name, file.FileName));
                 Directory.CreateDirectory(Path.GetDirectoryName(output));
                 File.WriteAllText(output, template);
+                if (file.ProjectFile)
+                    projectFile = output;
             }
-            return project;
+            return Project.FromFile(projectFile);
         }
 
         public string DoReplacements(string name, string template)
@@ -87,6 +91,7 @@ namespace Halibut
             public string Template { get; set; }
             public bool Open { get; set; }
             public bool Focused { get; set; }
+            public bool ProjectFile { get; set; }
         }
     }
 }

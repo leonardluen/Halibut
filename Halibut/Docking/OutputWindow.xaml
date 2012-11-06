@@ -1,8 +1,12 @@
-﻿<Window x:Class="Halibut.Docking.OutputWindow"
+﻿<AvalonDock:DockableContent x:Class="Halibut.Docking.OutputWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:AvalonDock="clr-namespace:AvalonDock;assembly=AvalonDock"
         Title="OutputWindow" Height="300" Width="700">
     <Grid>
-        <TextBox x:Name="output" IsHitTestVisible="False"></TextBox>
+        <TextBox x:Name="output" FontFamily="Courier New" PreviewKeyDown="output_PreviewKeyDown"
+                 PreviewKeyUp="output_PreviewKeyUp"
+                 TextWrapping="NoWrap" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto"
+                 VerticalScrollBarVisibility="Auto"></TextBox>
     </Grid>
-</Window>
+</AvalonDock:DockableContent>

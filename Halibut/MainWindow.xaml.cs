@@ -28,6 +28,7 @@ namespace Halibut
         public Project CurrentProject { get; private set; }
 
         private StartPage StartPage { get; set; }
+        private OutputWindow OutputWindow { get; set; }
 
         public MainWindow()
         {
@@ -35,6 +36,7 @@ namespace Halibut
             InitializeComponent();
             StartPage = new StartPage();
             StartPage.ShowAsDocument(dockingManager);
+            OutputWindow = new OutputWindow();
             Closing += OnClosing;
             Instance = this;
         }
@@ -136,6 +138,38 @@ namespace Halibut
             IntegrateProject(project);
         }
 
+        private void OpenProjectCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog();
+            dialog.Filter = "Project Configuration Files (*.config)|*.config|All Files (*.*)|*.*";
+            dialog.InitialDirectory = Path.Combine(UserPath, "Projects");
+            if (dialog.ShowDialog().Value)
+            {
+                var project = Project.FromFile(dialog.FileName);
+                // TODO: Open files
+                IntegrateProject(project);
+            }
+        }
+
+        private void BuildProjectCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (!CurrentProject.ContainsKey("build"))
+            {
+                MessageBox.Show("No build action specified in project configuration.",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                OpenFile(CurrentProject.File);
+                return;
+            }
+            OutputWindow.Show(dockingManager, AnchorStyle.Bottom);
+            OutputWindow.RunCommand(CurrentProject["build"], CurrentProject.RootDirectory, success =>
+                {
+                    Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            // TODO
+                        }));
+                });
+        }
+
         private void SaveCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = dockingManager.ActiveDocument is IDirtiedWindow;
@@ -170,6 +204,11 @@ namespace Halibut
             this.Close();
         }
 
+        private void CommandRequireOpenProject(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = CurrentProject != null;
+        }
+
         #endregion
     }
 
@@ -178,5 +217,6 @@ namespace Halibut
         public static readonly RoutedUICommand Exit = new RoutedUICommand("Exit Application", "Exit", typeof(MainWindow));
         public static readonly RoutedUICommand NewProject = new RoutedUICommand("New Project", "NewProject", typeof(MainWindow));
         public static readonly RoutedUICommand OpenProject = new RoutedUICommand("Open Project", "OpenProject", typeof(MainWindow));
+        public static readonly RoutedUICommand BuildProject = new RoutedUICommand("Build Project", "BuildProject", typeof(MainWindow));
     }
 }

@@ -28,14 +28,26 @@ namespace Halibut.Docking
         {
             InitializeComponent();
             RootDirectory = root;
-            var rootItem = RepopulateContents(RootDirectory);
-            rootItem.IsExpanded = true;
-            fileTree.Items.Add(rootItem);
-            FileSystemWatcher fsWatcher = new FileSystemWatcher(RootDirectory);
+            RepopulateContents();
+            var fsWatcher = new FileSystemWatcher(RootDirectory);
             fsWatcher.IncludeSubdirectories = true;
-            fsWatcher.Renamed += (s, e) => RepopulateContents(RootDirectory);
-            fsWatcher.Created += (s, e) => RepopulateContents(RootDirectory);
-            fsWatcher.Deleted += (s, e) => RepopulateContents(RootDirectory);
+            fsWatcher.NotifyFilter = NotifyFilters.FileName |
+                NotifyFilters.DirectoryName | NotifyFilters.CreationTime;
+            fsWatcher.Renamed += (s, e) => RepopulateContents();
+            fsWatcher.Created += (s, e) => RepopulateContents();
+            fsWatcher.Deleted += (s, e) => RepopulateContents();
+            fsWatcher.EnableRaisingEvents = true;
+        }
+
+        public void RepopulateContents()
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    var rootItem = RepopulateContents(RootDirectory);
+                    rootItem.IsExpanded = true;
+                    fileTree.Items.Clear();
+                    fileTree.Items.Add(rootItem);
+                }));
         }
 
         public TreeViewItem RepopulateContents(string directory)

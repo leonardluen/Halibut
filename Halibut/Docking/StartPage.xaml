@@ -22,7 +22,7 @@
                     <TextBlock Style="{StaticResource pageTitle}">Halibut</TextBlock>
                     <Label Style="{StaticResource subheader}">Actions</Label>
                     <Button Command="Halibut:Commands.NewProject" Style="{StaticResource actionLink}">New Project</Button>
-                    <Button Style="{StaticResource actionLink}">Open Project</Button>
+                    <Button Command="Halibut:Commands.OpenProject" Style="{StaticResource actionLink}">Open Project</Button>
                     <Label Style="{StaticResource subheader}">Recent</Label>
                     <TextBlock Foreground="{StaticResource dimBrush}">Nothing to see here</TextBlock>
                 </StackPanel>

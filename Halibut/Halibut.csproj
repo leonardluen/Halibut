@@ -108,6 +108,7 @@
     <Compile Include="ExitConfirmationDialog.xaml.cs">
       <DependentUpon>ExitConfirmationDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Extensions.cs" />
     <Compile Include="IDirtiedWindow.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -160,6 +161,7 @@
     </None>
     <None Include="Templates\Boilerplate\Boilerplate.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Templates\Boilerplate\enviornment.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -18,15 +18,20 @@
         <CommandBinding Command="Close" Executed="CloseCommand_Executed" CanExecute="CloseCommand_CanExecute"></CommandBinding>
         <CommandBinding Command="Halibut:Commands.Exit" Executed="ExitCommand_Executed"></CommandBinding>
         <CommandBinding Command="Halibut:Commands.NewProject" Executed="NewProjectCommand_Executed"></CommandBinding>
+        <CommandBinding Command="Halibut:Commands.OpenProject" Executed="OpenProjectCommand_Executed"></CommandBinding>
+        <CommandBinding Command="Halibut:Commands.BuildProject" CanExecute="CommandRequireOpenProject" Executed="BuildProjectCommand_Executed"></CommandBinding>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Command="Halibut:Commands.NewProject" Key="N" Modifiers="Ctrl+Shift"></KeyBinding>
+        <KeyBinding Command="Halibut:Commands.OpenProject" Key="O" Modifiers="Ctrl+Shift"></KeyBinding>
+        <KeyBinding Command="Halibut:Commands.BuildProject" Key="B" Modifiers="Ctrl+Shift"></KeyBinding>
         <KeyBinding Command="Close" Key="W" Modifiers="Ctrl"></KeyBinding>
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <!--Main menu-->
         <Menu x:Name="mainMenu" Background="{StaticResource dimBrush}" Foreground="{StaticResource darkBrush}">
@@ -54,5 +59,9 @@
         </Menu>
         <!--Docking interface-->
         <ad:DockingManager x:Name="dockingManager" Grid.Row="1"></ad:DockingManager>
+        <StatusBar Grid.Row="2">
+            <Image x:Name="statusImage"></Image>
+            <TextBlock x:Name="statusText">Ready</TextBlock>
+        </StatusBar>
     </Grid>
 </Window>

@@ -5,7 +5,7 @@
         xmlns:AvalonDock="clr-namespace:AvalonDock;assembly=AvalonDock"
         Title="FileEditor" Height="500" Width="700">
     <Grid>
-        <ae:TextEditor x:Name="textEditor" FontSize="14" ShowLineNumbers="true" 
-                       TextChanged="textEditor_TextChanged" FontFamily="Consolas"></ae:TextEditor>
+        <ae:TextEditor x:Name="textEditor" FontSize="14" ShowLineNumbers="true"
+            TextChanged="textEditor_TextChanged" FontFamily="Consolas"></ae:TextEditor>
     </Grid>
 </AvalonDock:DockableContent>

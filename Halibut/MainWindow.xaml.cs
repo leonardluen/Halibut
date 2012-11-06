@@ -40,6 +40,7 @@ namespace Halibut
             StartPage.ShowAsDocument(dockingManager);
             OutputWindow = new OutputWindow();
             ErrorWindow = new ErrorWindow();
+            ErrorWindow.OpenError += ErrorWindow_OpenError;
             Closing += OnClosing;
             Instance = this;
         }
@@ -56,7 +57,7 @@ namespace Halibut
             CurrentProject = null;
         }
 
-        public void OpenFile(string path)
+        public FileEditor OpenFile(string path)
         {
             if (path == null || DataUtility.IsPlaintext(path))
             {
@@ -67,16 +68,18 @@ namespace Halibut
                         if (item.FileName == path)
                         {
                             item.Focus();
-                            return;
+                            return item;
                         }
                     }
                 }
                 var editor = new FileEditor(path);
                 editor.ShowAsDocument(dockingManager);
+                return editor;
             }
             else
             {
                 // TODO: Raw data editor
+                return null;
             }
         }
 
@@ -115,6 +118,16 @@ namespace Halibut
                         item.Save();
                 }
             }
+        }
+
+        void ErrorWindow_OpenError(object sender, ErrorWindow.OpenErrorEventArgs e)
+        {
+            var file = Path.Combine(CurrentProject.RootDirectory, e.Error.File);
+            var editor = OpenFile(file);
+            var offset = editor.textEditor.Document.GetOffset(e.Error.LineNumber, 0);
+            var line = editor.textEditor.Document.GetLineByOffset(offset);
+            editor.textEditor.ScrollToLine(e.Error.LineNumber);
+            editor.textEditor.Select(offset, line.Length);
         }
 
         #endregion

@@ -1,0 +1,122 @@
+; DCPU-16 Boilerplate
+
+; Equates
+.equ keyboard_index 0x7FFF
+.equ screen_map 0x8000
+
+; Initilalization
+program_init:
+    JSR init_devices
+    SET PC, start
+
+; Useful routines
+init_devices:
+    HWN I
+.loop:
+    SUB I, 1
+    IFE I, -1
+        SET PC, POP
+    HWQ I ; Query the device
+    IFE A, 0xf615
+        IFE B, 0x7349
+            SET PC, .screen
+    IFE A, 0x7406
+        IFE B, 0x30cf
+            SET PC, .keyboard
+    SET PC, .loop    
+.screen:
+    SET A, 0
+    SET B, screen_map
+    HWI I
+    SET PC, .loop
+.keyboard:
+    SET [keyboard_index], I
+    SET PC, .loop
+    
+; Print the string in [A] to X,Y
+print_string:
+    SET PUSH, A
+    SET PUSH, X
+    SET PUSH, Y
+    MUL Y, 32
+    ADD X, Y
+    ADD X, 0x8000
+.loop:
+    IFE [A], 0
+        SET PC, .return
+    SET Y, [A]
+    BOR Y, 0xF000
+    SET [X], Y
+    ADD X, 1
+    ADD A, 1
+    SET PC, .loop
+.return:
+    SET Y, POP
+    SET X, POP
+    SET A, POP
+    SET PC, POP
+    
+; Writes A to X,Y in hex
+print_hex:
+    SET PUSH, A
+    SET PUSH, X
+    SET PUSH, Y
+    MUL Y, 32
+    ADD X, Y
+    ADD X, 0x8000
+.loop:
+    SET Y, A
+    AND Y, 0xF000
+    SHR Y, 12
+    IFL Y, 10
+        ADD Y, '0'
+    IFL Y, 16
+        ADD Y, 'A'
+    BOR Y, 0xF000
+    SET [X], Y
+    ADD X, 1
+    SHL A, 4
+    IFE A, 0
+        SET PC, .return
+    SET PC, .loop
+.return:
+    SET Y, POP
+    SET X, POP
+    SET A, POP
+    SET PC, POP
+    
+; Writes A to X,Y in decimal
+print_dec:
+    SET PUSH, A
+    SET PUSH, X
+    SET PUSH, Y
+    MUL Y, 32
+    ADD X, Y
+    ADD X, 0x8000
+    IFG X, 9
+        ADD X, 1
+    IFG X, 99
+        ADD X, 1
+    IFG X, 999
+        ADD X, 1
+    IFG X, 9999
+        ADD X, 1
+.loop:
+    SET Y, A
+    MOD Y, 10
+    ADD Y, '0'
+    BOR Y, 0xF000
+    SET [X], Y
+    SUB X, 1
+    DIV A, 10
+    IFE A, 0
+        SET PC, .return
+    SET PC, .loop
+.return:
+    SET Y, POP
+    SET X, POP
+    SET A, POP
+    SET PC, POP
+    
+; User code
+start:

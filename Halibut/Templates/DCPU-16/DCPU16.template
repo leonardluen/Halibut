@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="Generic Assembly" icon="../generic-project.png">
+  <file name="enviornment.config" template="enviornment.config"></file>
+  <file name="base.dasm" template="base.dasm" open="true"></file>
+  <file name="{project-fname}.dasm" template="main.dasm" open="true" focus="true"></file>
+</project>

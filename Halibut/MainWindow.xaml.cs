@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -11,7 +12,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using AvalonDock;
 using Halibut.Docking;
 using Microsoft.Win32;
@@ -24,14 +24,28 @@ namespace Halibut
     public partial class MainWindow : Window
     {
         public static MainWindow Instance { get; set; }
+        public static string UserPath { get; private set; }
+
+        private StartPage StartPage { get; set; }
 
         public MainWindow()
         {
+            InitializeEnviornment();
             InitializeComponent();
-            var startPage = new StartPage();
-            startPage.ShowAsDocument(dockingManager);
+            StartPage = new StartPage();
+            StartPage.ShowAsDocument(dockingManager);
             Closing += OnClosing;
             Instance = this;
+        }
+
+        private void InitializeEnviornment()
+        {
+            UserPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            UserPath = Path.Combine(UserPath, "Halibut");
+            Directory.CreateDirectory(UserPath);
+            Directory.CreateDirectory(Path.Combine(UserPath, "Projects"));
+            Directory.CreateDirectory(Path.Combine(UserPath, "Templates"));
+            Directory.CreateDirectory(Path.Combine(UserPath, "Settings"));
         }
 
         public void OpenFile(string path)
@@ -88,6 +102,13 @@ namespace Halibut
             var window = new NewProjectWindow();
             if (!window.ShowDialog().Value)
                 return;
+            var template = window.SelectedTemplate;
+            var name = window.ProjectName;
+            var project = template.Create(window.ProjectName, Path.Combine(window.ProjectDirectory, name));
+            // Open files
+            foreach (var file in template.TemplateFiles.Where(f => f.Open).OrderBy(f => f.Focused))
+                OpenFile(Path.Combine(project.RootDirectory, template.DoReplacements(window.ProjectName, file.FileName)));
+            StartPage.Close();
         }
 
         private void SaveCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)

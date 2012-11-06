@@ -1,0 +1,8 @@
+﻿; {project-name} base file
+; Created on {current-date}
+
+#include <boilerplate.dasm>
+#include "{project-fname}.dasm"
+
+exit:
+    SET PC, exit

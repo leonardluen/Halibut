@@ -1,0 +1,4 @@
+﻿; {project-name} base file
+; Created on {current-date}
+
+#include "{project-fname}.dasm"

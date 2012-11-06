@@ -1,0 +1,12 @@
+﻿; {project-name}
+; Created on {current-date}
+
+    SET X, 0
+    SET Y, 0
+    SET A, message
+    JSR print_string
+
+    SET PC, exit
+
+message:
+    .asciiz "Hello, world!"

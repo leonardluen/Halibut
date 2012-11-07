@@ -199,7 +199,7 @@ namespace Halibut
                                 statusText.Text = "Build suceeded";
                             else
                                 statusText.Text = "Build failed";
-                            if (CurrentProject.ContainsKey("error-regex"))
+                            if (CurrentProject.ContainsKey("error-regex") && result.Output != null)
                             {
                                 var errorRegex = new Regex(CurrentProject["error-regex"]);
                                 var matches = errorRegex.Matches(result.Output);

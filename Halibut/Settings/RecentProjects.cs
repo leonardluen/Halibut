@@ -44,7 +44,7 @@ namespace Halibut.Settings
             XElement toRemove = null;
             foreach (var element in document.Root.Elements())
             {
-                if (element.Attribute("config").Value == element.Attribute("config").Value)
+                if (element.Attribute("config").Value == newProject.Attribute("config").Value)
                 {
                     toRemove = element;
                     break;

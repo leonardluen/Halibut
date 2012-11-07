@@ -43,6 +43,18 @@ namespace Halibut
             ErrorWindow.OpenError += ErrorWindow_OpenError;
             Closing += OnClosing;
             Instance = this;
+            this.Drop += MainWindow_Drop;
+            this.AllowDrop = true;
+        }
+
+        void MainWindow_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                foreach (var file in files)
+                    OpenFile(file);
+            }
         }
 
         private void InitializeEnviornment()

@@ -32,6 +32,8 @@ namespace Halibut
             project.RootDirectory = Path.GetDirectoryName(file);
             
             // Open and parse project config
+            Stack<bool> conditions = new Stack<bool>();
+            conditions.Push(true);
             using (var reader = new StreamReader(file))
             {
                 while (!reader.EndOfStream)
@@ -40,7 +42,17 @@ namespace Halibut
                     line = line.Trim();
                     if (line.StartsWith("#"))
                         continue;
-                    if (!line.Contains("="))
+                    if (line.StartsWith("@"))
+                    {
+                        if (line.ToUpper() == "@END")
+                            conditions.Pop();
+                        if (line.ToUpper().StartsWith("@IF "))
+                        {
+                            // TODO: Make this better
+                            conditions.Push(line.ToUpper().Substring(3).Trim() == "WINDOWS");
+                        }
+                    }
+                    if (!line.Contains("=") || !conditions.Peek())
                         continue;
                     var key = line.Remove(line.IndexOf('='));
                     var value = line.Substring(line.IndexOf('=') + 1);

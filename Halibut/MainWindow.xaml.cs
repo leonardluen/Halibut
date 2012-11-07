@@ -195,7 +195,14 @@ namespace Halibut
                 return;
             }
             OutputWindow.Show(dockingManager, AnchorStyle.Bottom);
-            OutputWindow.RunCommand(CurrentProject["build"], CurrentProject.RootDirectory, result =>
+            var workingDirectory = CurrentProject.RootDirectory;
+            if (CurrentProject.ContainsKey("working-directory"))
+            {
+                workingDirectory = CurrentProject["working-directory"];
+                if (!Path.IsPathRooted(workingDirectory))
+                    workingDirectory = Path.Combine(CurrentProject.RootDirectory, workingDirectory);
+            }
+            OutputWindow.RunCommand(CurrentProject["build"], workingDirectory, result =>
                 {
                     Dispatcher.BeginInvoke(new Action(() =>
                         {

@@ -12,6 +12,17 @@ namespace Halibut
         private Dictionary<string, string> Values { get; set; }
         public string RootDirectory { get; set; }
         public string File { get; set; }
+        public string Name 
+        {
+            get
+            {
+                return this["name"];
+            }
+            set
+            {
+                this["name"] = value;
+            }
+        }
 
         public static Project FromFile(string file)
         {

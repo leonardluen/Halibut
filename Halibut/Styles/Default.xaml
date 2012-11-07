@@ -47,6 +47,9 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="lightActionLink" TargetType="Button" BasedOn="{StaticResource actionLink}">
+        <Setter Property="Foreground" Value="{StaticResource dimBrush}"></Setter>
+    </Style>
     <Style x:Key="startPageSide">
         <Setter Property="Grid.Background" Value="{StaticResource darkBrush}"></Setter>
         <Setter Property="TextBlock.Foreground" Value="White"></Setter>
@@ -107,26 +110,6 @@
                             <Setter TargetName="ContentSite" Property="TextBlock.Foreground" Value="{StaticResource darkBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <Style x:Key="terminalTextBox" TargetType="TextBox">
-        <Setter Property="Background" Value="Black"></Setter>
-        <Setter Property="Foreground" Value="White"></Setter>
-        <Setter Property="BorderThickness" Value="0"></Setter>
-        <Setter Property="OverridesDefaultStyle" Value="True"></Setter>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock>&gt;</TextBlock>
-                        <ScrollViewer x:Name="PART_ContentHost" Grid.Column="1" />
-                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

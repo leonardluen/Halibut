@@ -16,6 +16,7 @@ using AvalonDock;
 using Halibut.Docking;
 using Microsoft.Win32;
 using System.Text.RegularExpressions;
+using Halibut.Settings;
 
 namespace Halibut
 {
@@ -43,8 +44,8 @@ namespace Halibut
             ErrorWindow.OpenError += ErrorWindow_OpenError;
             Closing += OnClosing;
             Instance = this;
-            this.Drop += MainWindow_Drop;
-            this.AllowDrop = true;
+            Drop += MainWindow_Drop;
+            AllowDrop = true;
         }
 
         void MainWindow_Drop(object sender, DragEventArgs e)
@@ -98,13 +99,14 @@ namespace Halibut
         /// <summary>
         /// Opens a project and adjusts the enviornment to use it.
         /// </summary>
-        public void IntegrateProject(Project project)
+        public void OpenProject(Project project)
         {
             var browser = new FileBrowser(project.RootDirectory);
             browser.Show(dockingManager, AnchorStyle.Right);
             browser.OpenFile += (s, e) => OpenFile(e.File);
             CurrentProject = project;
             StartPage.Close();
+            RecentProjects.ProjectOpened(project);
         }
 
         #region Event Handlers
@@ -140,6 +142,8 @@ namespace Halibut
             var line = editor.textEditor.Document.GetLineByOffset(offset);
             editor.textEditor.ScrollToLine(e.Error.LineNumber);
             editor.textEditor.Select(offset, line.Length);
+            editor.Focus();
+            editor.textEditor.Focus();
         }
 
         #endregion
@@ -164,7 +168,7 @@ namespace Halibut
             // Open files
             foreach (var file in template.TemplateFiles.Where(f => f.Open).OrderByDescending(f => f.Focused))
                 OpenFile(Path.Combine(project.RootDirectory, template.DoReplacements(window.ProjectName, file.FileName)));
-            IntegrateProject(project);
+            OpenProject(project);
         }
 
         private void OpenProjectCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -176,7 +180,7 @@ namespace Halibut
             {
                 var project = Project.FromFile(dialog.FileName);
                 // TODO: Open files
-                IntegrateProject(project);
+                OpenProject(project);
             }
         }
 
@@ -196,7 +200,7 @@ namespace Halibut
                     Dispatcher.BeginInvoke(new Action(() =>
                         {
                             if (result.ReturnCode == 0)
-                                statusText.Text = "Build suceeded";
+                                statusText.Text = "Build succeeded";
                             else
                                 statusText.Text = "Build failed";
                             if (CurrentProject.ContainsKey("error-regex") && result.Output != null)

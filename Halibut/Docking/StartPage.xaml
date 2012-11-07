@@ -24,7 +24,14 @@
                     <Button Command="Halibut:Commands.NewProject" Style="{StaticResource actionLink}">New Project</Button>
                     <Button Command="Halibut:Commands.OpenProject" Style="{StaticResource actionLink}">Open Project</Button>
                     <Label Style="{StaticResource subheader}">Recent</Label>
-                    <TextBlock Foreground="{StaticResource dimBrush}">Nothing to see here</TextBlock>
+                    <TextBlock x:Name="recentNone" Foreground="{StaticResource dimBrush}">Nothing to see here</TextBlock>
+                    <ListView x:Name="recentList" Background="Transparent" BorderThickness="0">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding Name}" Style="{StaticResource lightActionLink}" Click="recentProject_Click"></Button>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </StackPanel>
             </Grid>
         </Grid>

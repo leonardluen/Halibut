@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using AvalonDock;
+using Halibut.Settings;
 
 namespace Halibut.Docking
 {
@@ -22,6 +23,19 @@ namespace Halibut.Docking
         public StartPage()
         {
             InitializeComponent();
+            var recent = RecentProjects.GetRecentProjects();
+            if (recent.Count == 0)
+                recentNone.Visibility = Visibility.Visible;
+            else
+            {
+                recentNone.Visibility = Visibility.Collapsed;
+                recentList.ItemsSource = recent;
+            }
+        }
+
+        private void recentProject_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow.Instance.OpenProject((sender as Button).DataContext as Project);
         }
     }
 }

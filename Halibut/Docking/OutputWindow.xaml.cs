@@ -59,35 +59,10 @@ namespace Halibut.Docking
                 {
                     try
                     {
-                        var startInfo = new ProcessStartInfo();
-                        if (!command.Contains(' '))
-                            startInfo.FileName = command;
-                        else
-                            startInfo.FileName = command.Remove(command.IndexOf(' '));
-                        if (!File.Exists(startInfo.FileName))
-                        {
-                            if (File.Exists(Path.Combine(workingDirectory, startInfo.FileName)))
-                                startInfo.FileName = Path.Combine(workingDirectory, startInfo.FileName);
-                            else
-                            {
-                                // Attempt to find it in the path
-                                var path = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine);
-                                foreach (var item in path.Split(';'))
-                                {
-                                    if (File.Exists(Path.Combine(item, startInfo.FileName)))
-                                    {
-                                        startInfo.FileName = Path.Combine(item, startInfo.FileName);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        if (command.Contains(' '))
-                            startInfo.Arguments = command.Substring(command.SafeIndexOf(' ') + 1);
+                        var startInfo = MainWindow.GetStartInfo(command, workingDirectory);
                         startInfo.UseShellExecute = false;
                         startInfo.RedirectStandardOutput = true;
                         startInfo.RedirectStandardError = true;
-                        startInfo.WorkingDirectory = workingDirectory;
                         startInfo.CreateNoWindow = true;
                         var process = Process.Start(startInfo);
                         // TODO: Output as data comes in

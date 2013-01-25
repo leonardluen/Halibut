@@ -25,7 +25,7 @@ namespace Halibut.Docking
     /// </summary>
     public partial class FileEditor : DockableContent, IDirtiedWindow
     {
-        public const string FileFilter = "DCPU-16 Assembly (*.dasm)|*.dasm|All files (*.*)|*.*";
+        public const string FileFilter = "DCPU-16 Assembly (*.dasm)|*.dasm|z80 Assembly (*.asm)|*.asm;*.z80|All files (*.*)|*.*";
 
         internal static void Initialize()
         {

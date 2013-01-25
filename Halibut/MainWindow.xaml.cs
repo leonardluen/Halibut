@@ -33,6 +33,7 @@ namespace Halibut
         private StartPage StartPage { get; set; }
         private OutputWindow OutputWindow { get; set; }
         private ErrorWindow ErrorWindow { get; set; }
+        private FileBrowser FileBrowser { get; set; }
 
         public Process Debugger { get; set; }
 
@@ -104,9 +105,9 @@ namespace Halibut
         /// </summary>
         public void OpenProject(Project project)
         {
-            var browser = new FileBrowser(project.RootDirectory);
-            browser.Show(dockingManager, AnchorStyle.Left);
-            browser.OpenFile += (s, e) => OpenFile(e.File);
+            FileBrowser = new FileBrowser(project.RootDirectory);
+            FileBrowser.Show(dockingManager, AnchorStyle.Left);
+            FileBrowser.OpenFile += (s, e) => OpenFile(e.File);
             CurrentProject = project;
             StartPage.Close();
             Title = project.Name + " - Halibut";
@@ -140,7 +141,7 @@ namespace Halibut
 
         void ErrorWindow_OpenError(object sender, ErrorWindow.OpenErrorEventArgs e)
         {
-            var file = Path.Combine(CurrentProject.RootDirectory, e.Error.File);
+            var file = Path.Combine(CurrentProject.RootDirectory, e.Error.FileFullPath);
             var editor = OpenFile(file);
             if (editor == null)
                 return;
@@ -209,6 +210,7 @@ namespace Halibut
                 if (!Path.IsPathRooted(workingDirectory))
                     workingDirectory = Path.Combine(CurrentProject.RootDirectory, workingDirectory);
             }
+            FileBrowser.DisableUpdates = true;
             OutputWindow.RunCommand(CurrentProject["build"], workingDirectory, result =>
                 {
                     Dispatcher.BeginInvoke(new Action(() =>
@@ -219,7 +221,7 @@ namespace Halibut
                                 statusText.Text = "Build failed";
                             if (CurrentProject.ContainsKey("error-regex") && result.Output != null)
                             {
-                                var errorRegex = new Regex(CurrentProject["error-regex"]);
+                                var errorRegex = new Regex(CurrentProject["error-regex"], RegexOptions.Multiline);
                                 var matches = errorRegex.Matches(result.Output);
                                 var errors = new List<BuildError>();
                                 foreach (var match in matches)
@@ -227,21 +229,22 @@ namespace Halibut
                                     var error = new BuildError();
                                     var item = errorRegex.Match(match.ToString());
                                     if (item.Groups["file"] != null)
-                                        error.File = item.Groups["file"].Value.Replace("\r", "");
+                                        error.FileFullPath = item.Groups["file"].Value.Replace("\r", "");
                                     if (item.Groups["error"] != null)
                                         error.Error = item.Groups["error"].Value.Replace("\r", "");
                                     if (item.Groups["line"] != null)
                                         error.LineNumber = int.Parse(item.Groups["line"].Value);
+                                    error.File = Path.GetFileName(error.FileFullPath);
                                     errors.Add(error);
                                 }
+                                ErrorWindow.DataContext = errors;
                                 if (errors.Count != 0)
-                                {
-                                    ErrorWindow.DataContext = errors;
                                     ErrorWindow.Show(dockingManager, AnchorStyle.Bottom);
-                                }
                             }
                             if (callback != null)
                                 callback();
+                            FileBrowser.DisableUpdates = false;
+                            FileBrowser.RepopulateContents();
                         }));
                 });
         }

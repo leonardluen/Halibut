@@ -20,6 +20,8 @@ namespace Halibut.Docking
     /// </summary>
     public partial class FileBrowser : DockableContent
     {
+        public static bool DisableUpdates = false;
+
         public event EventHandler<OpenFileEventArgs> OpenFile;
 
         public string RootDirectory { get; set; }
@@ -41,6 +43,8 @@ namespace Halibut.Docking
 
         public void RepopulateContents()
         {
+            if (DisableUpdates)
+                return;
             Dispatcher.BeginInvoke(new Action(() =>
                 {
                     var rootItem = RepopulateContents(RootDirectory);

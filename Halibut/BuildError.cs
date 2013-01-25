@@ -11,6 +11,7 @@ namespace Halibut
     {
         public string Error { get; set; }
         public string File { get; set; }
+        public string FileFullPath { get; set; }
         public int LineNumber { get; set; }
     }
 }

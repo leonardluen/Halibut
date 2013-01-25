@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<SyntaxDefinition name="z80 Assembly" extensions=".z80;.asm" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+<SyntaxDefinition name="z80 Assembly" extensions=".z80;.asm;.inc" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
   <Color name="comment" foreground="#778899" fontStyle="italic" />
   <Color name="instruction" foreground="#0000FF" />
   <Color name="directive" foreground="#2E8B57" fontWeight="bold" />

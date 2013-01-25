@@ -160,6 +160,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Highlighting\dasm.xshd" />
     <EmbeddedResource Include="Highlighting\markdown.xshd" />
+    <EmbeddedResource Include="Highlighting\z80.xshd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SyntaxDefinition name="z80 Assembly" extensions=".z80;.asm" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="comment" foreground="#778899" fontStyle="italic" />
+  <Color name="instruction" foreground="#0000FF" />
+  <Color name="directive" foreground="#2E8B57" fontWeight="bold" />
+  <Color name="label" foreground="#4682B4" fontWeight="bold" />
+  <Color name="string" foreground="#F08080" />
+  <Color name="number" foreground="#5F9EA0" />
+  <Color name="register" foreground="#9932CC" />
+    <Color name="flags" foreground="#5F9EA0" />
+
+  <RuleSet ignoreCase="true">
+    <Span color="comment" begin=";" />
+    
+    <Span color="string">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <!-- nested span for escape sequences -->
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <Span color="string">
+      <Begin>'</Begin>
+      <End>'</End>
+      <RuleSet>
+        <!-- nested span for escape sequences -->
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <Span color="string">
+      <Begin>&lt;</Begin>
+      <End>&gt;</End>
+      <RuleSet>
+        <!-- nested span for escape sequences -->
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <Span color="label" begin="^[ \t]*\.?[A-Za-z_]+:" end="$"></Span>
+
+    <Span color="directive" begin="^[ \t]*#[A-Za-z]+" end="[ \t]"></Span>
+    <Span color="directive" begin="^[ \t]*\.[A-Za-z]+" end="[ \t]"></Span>
+
+    <Keywords color="instruction">
+      <Word>ADC</Word>
+      <Word>ADD</Word>
+      <Word>AND</Word>
+      <Word>BIT</Word>
+      <Word>CALL</Word>
+      <Word>CCF</Word>
+      <Word>CP</Word>
+      <Word>CPD</Word>
+      <Word>CPDR</Word>
+      <Word>CPI</Word>
+      <Word>CPIR</Word>
+      <Word>CPL</Word>
+      <Word>DAA</Word>
+      <Word>DEC</Word>
+      <Word>DI</Word>
+      <Word>DJNZ</Word>
+      <Word>EI</Word>
+      <Word>EX</Word>
+      <Word>EXX</Word>
+      <Word>HALT</Word>
+      <Word>IM</Word>
+      <Word>IN</Word>
+      <Word>INC</Word>
+      <Word>IND</Word>
+      <Word>INDR</Word>
+      <Word>INI</Word>
+      <Word>INIR</Word>
+      <Word>JP</Word>
+      <Word>JR</Word>
+      <Word>LD</Word>
+      <Word>LDD</Word>
+      <Word>LDDR</Word>
+      <Word>LDI</Word>
+      <Word>LDIR</Word>
+      <Word>NEG</Word>
+      <Word>NOP</Word>
+      <Word>OR</Word>
+      <Word>OUT</Word>
+      <Word>OUTD</Word>
+      <Word>OUTDR</Word>
+      <Word>OUTI</Word>
+      <Word>OTIR</Word>
+      <Word>POP</Word>
+      <Word>PUSH</Word>
+      <Word>RES</Word>
+      <Word>RET</Word>
+      <Word>RETI</Word>
+      <Word>RETN</Word>
+      <Word>RLA</Word>
+      <Word>RL</Word>
+      <Word>RLCA</Word>
+      <Word>RLC</Word>
+      <Word>RRA</Word>
+      <Word>RR</Word>
+      <Word>RRCA</Word>
+      <Word>RRC</Word>
+      <Word>RRD</Word>
+      <Word>RST</Word>
+      <Word>SBC</Word>
+      <Word>SCF</Word>
+      <Word>SET</Word>
+      <Word>SLA</Word>
+      <Word>SRA</Word>
+      <Word>SLL</Word>
+      <Word>SRL</Word>
+      <Word>SUB</Word>
+      <Word>XOR</Word>
+    </Keywords>
+
+    <Rule color="number">
+      \b-?0[xX][0-9a-fA-F]+  # hex number
+      |    \b
+      \b-?0[bB][0-1]+  # binary number
+      |    \b
+      \b-?0[oO][0-8]+  # octal number
+      |    \b
+      \b-?0[dD][0-9]+  # decimal number
+      |    \b
+      \b-?[0-9]+  # plain old number
+    </Rule>
+
+    <Keywords color="register">
+      <Word>AF</Word>
+      <Word>BC</Word>
+      <Word>DE</Word>
+      <Word>HL</Word>
+      <Word>IX</Word>
+      <Word>IY</Word>
+      <Word>A</Word>
+      <Word>B</Word>
+      <Word>C</Word>
+      <Word>D</Word>
+      <Word>E</Word>
+    </Keywords>
+
+    <Keywords color="flags">
+      <Word>S</Word>
+      <Word>Z</Word>
+      <Word>X</Word>
+      <Word>Y</Word>
+      <Word>H</Word>
+      <Word>P</Word>
+      <Word>N</Word>
+      <Word>C</Word>
+      <Word>P/O</Word>
+    </Keywords>
+  </RuleSet>
+</SyntaxDefinition>

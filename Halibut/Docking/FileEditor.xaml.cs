@@ -33,6 +33,8 @@ namespace Halibut.Docking
                 HighlightingLoader.Load(FromResource("Halibut.Highlighting.dasm.xshd"), HighlightingManager.Instance));
             HighlightingManager.Instance.RegisterHighlighting("Markdown", new[] { ".md", ".markdown", ".mkdown" },
                 HighlightingLoader.Load(FromResource("Halibut.Highlighting.markdown.xshd"), HighlightingManager.Instance));
+            HighlightingManager.Instance.RegisterHighlighting("z80 Assembly", new[] { ".z80", ".asm" },
+                HighlightingLoader.Load(FromResource("Halibut.Highlighting.z80.xshd"), HighlightingManager.Instance));
             foreach (var name in HighlightingManager.Instance.HighlightingNames)
                 Console.WriteLine(name);
         }

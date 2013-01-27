@@ -262,20 +262,17 @@ namespace Halibut
                 {
                     var workingDirectory = CurrentProject.RootDirectory;
                     if (CurrentProject.ContainsKey("working-directory"))
-                    {
                         workingDirectory = CurrentProject["working-directory"];
-                        if (!Path.IsPathRooted(workingDirectory))
-                            workingDirectory = Path.Combine(CurrentProject.RootDirectory, workingDirectory);
-                        var command = CurrentProject["debug"];
-                        var startInfo = GetStartInfo(command, workingDirectory);
-                        startInfo.CreateNoWindow = true;
-                        Debugger = new Process();
-                        Debugger.Exited += Debugger_Exited;
-                        Debugger.StartInfo = startInfo;
-                        Dispatcher.BeginInvoke(new Action(() => statusText.Text = "Debugging"));
-                        Debugger.Start();
-                    }
-
+                    if (!Path.IsPathRooted(workingDirectory))
+                        workingDirectory = Path.Combine(CurrentProject.RootDirectory, workingDirectory);
+                    var command = CurrentProject["debug"];
+                    var startInfo = GetStartInfo(command, workingDirectory);
+                    startInfo.CreateNoWindow = true;
+                    Debugger = new Process();
+                    Debugger.Exited += Debugger_Exited;
+                    Debugger.StartInfo = startInfo;
+                    Dispatcher.BeginInvoke(new Action(() => statusText.Text = "Debugging"));
+                    Debugger.Start();
                 }), this);
         }
 

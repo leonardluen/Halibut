@@ -54,7 +54,15 @@
             <MenuItem Header="Edit"></MenuItem>
             <MenuItem Header="View"></MenuItem>
             <MenuItem Header="Debug"></MenuItem>
-            <MenuItem Header="Git"></MenuItem>
+            <MenuItem Header="Git">
+                <MenuItem Header="Init"></MenuItem>
+                <MenuItem Header="Status"></MenuItem>
+                <MenuItem Header="Commit"></MenuItem>
+                <MenuItem Header="Push"></MenuItem>
+                <MenuItem Header="Pull"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Git Bash"></MenuItem>
+            </MenuItem>
             <MenuItem Header="Tools"></MenuItem>
             <MenuItem Header="Window"></MenuItem>
             <MenuItem Header="Help"></MenuItem>

@@ -53,7 +53,12 @@
             </MenuItem>
             <MenuItem Header="Edit"></MenuItem>
             <MenuItem Header="View"></MenuItem>
-            <MenuItem Header="Debug"></MenuItem>
+            <MenuItem Header="Build">
+                <MenuItem Header="Build Project" Command="Halibut:Commands.BuildProject"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Debug">
+                <MenuItem Header="Start Debugging" Command="Halibut:Commands.StartDebugging"></MenuItem>
+            </MenuItem>
             <MenuItem Header="Git">
                 <MenuItem Header="Init"></MenuItem>
                 <MenuItem Header="Status"></MenuItem>

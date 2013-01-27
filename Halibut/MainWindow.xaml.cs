@@ -213,7 +213,7 @@ namespace Halibut
 
         private void BuildProjectCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            var callback = e.Parameter as Action;
+            var callback = e.Parameter as Action<bool>;
             Commands.SaveAll.Execute(null, this);
             if (!CurrentProject.ContainsKey("build"))
             {
@@ -239,6 +239,7 @@ namespace Halibut
                                 statusText.Text = "Build succeeded";
                             else
                                 statusText.Text = "Build failed";
+                            bool success = true;
                             if (CurrentProject.ContainsKey("error-regex") && result.Output != null)
                             {
                                 var errorRegex = new Regex(CurrentProject["error-regex"], RegexOptions.Multiline);
@@ -258,11 +259,11 @@ namespace Halibut
                                     errors.Add(error);
                                 }
                                 ErrorWindow.DataContext = errors;
-                                if (errors.Count != 0)
+                                if (success = errors.Count != 0)
                                     ErrorWindow.Show(dockingManager, AnchorStyle.Bottom);
                             }
                             if (callback != null)
-                                callback();
+                                callback(success);
                             FileBrowser.DisableUpdates = false;
                             FileBrowser.RepopulateContents();
                         }));
@@ -278,8 +279,14 @@ namespace Halibut
         {
             // TODO: Strongly consider refactoring debugging
             Commands.SaveAll.Execute(null, this);
-            Commands.BuildProject.Execute(new Action(() => 
+            Commands.BuildProject.Execute(new Action<bool>(success => 
                 {
+                    if (!success)
+                    {
+                        if (MessageBox.Show("Build failed! Start debugging anyway?", "Build Failed",
+                            MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.No)
+                            return;
+                    }
                     var workingDirectory = CurrentProject.RootDirectory;
                     if (CurrentProject.ContainsKey("working-directory"))
                         workingDirectory = CurrentProject["working-directory"];

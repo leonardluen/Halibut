@@ -74,7 +74,7 @@
         </Menu>
         <!--Docking interface-->
         <ad:DockingManager x:Name="dockingManager" Grid.Row="1"></ad:DockingManager>
-        <StatusBar Grid.Row="2">
+        <StatusBar Grid.Row="2" x:Name="statusBar">
             <Image x:Name="statusImage"></Image>
             <TextBlock x:Name="statusText">Ready</TextBlock>
         </StatusBar>

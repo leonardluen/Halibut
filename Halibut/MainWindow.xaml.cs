@@ -111,7 +111,19 @@ namespace Halibut
             CurrentProject = project;
             StartPage.Close();
             Title = project.Name + " - Halibut";
+            var watcher = new FileSystemWatcher(Path.GetDirectoryName(project.File), Path.GetFileName(project.File));
+            watcher.Changed += (s, e) => ReloadProject();
+            watcher.EnableRaisingEvents = true;
             RecentProjects.ProjectOpened(project);
+        }
+
+        private void ReloadProject()
+        {
+            Dispatcher.Invoke(new Action(() =>
+                {
+                    CurrentProject = Project.FromFile(CurrentProject.File);
+                    Title = CurrentProject.Name + " - Halibut";
+                }));
         }
 
         #region Event Handlers
@@ -270,8 +282,18 @@ namespace Halibut
                     startInfo.CreateNoWindow = true;
                     Debugger = new Process();
                     Debugger.Exited += Debugger_Exited;
+                    Debugger.EnableRaisingEvents = true;
                     Debugger.StartInfo = startInfo;
-                    Dispatcher.BeginInvoke(new Action(() => statusText.Text = "Debugging"));
+                    Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            statusText.Text = "Debugging";
+                            statusBar.Background = new SolidColorBrush(Colors.OrangeRed);
+                            foreach (var document in dockingManager.DockableContents)
+                            {
+                                if (document is FileEditor)
+                                    (document as FileEditor).Disable();
+                            }
+                        }));
                     Debugger.Start();
                 }), this);
         }
@@ -279,7 +301,16 @@ namespace Halibut
         void Debugger_Exited(object sender, EventArgs e)
         {
             Debugger = null;
-            Dispatcher.BeginInvoke(new Action(() => statusText.Text = "Ready"));
+            Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    statusText.Text = "Ready";
+                    statusBar.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xF1, 0xED, 0xED));
+                    foreach (var document in dockingManager.DockableContents)
+                    {
+                        if (document is FileEditor)
+                            (document as FileEditor).Enable();
+                    }
+                }));
         }
 
         private void SaveCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)

@@ -132,6 +132,16 @@ namespace Halibut.Docking
             Title = ObjectName;
         }
 
+        public void Disable()
+        {
+            textEditor.IsEnabled = false;
+        }
+
+        public void Enable()
+        {
+            textEditor.IsEnabled = true;
+        }
+
         private void textEditor_TextChanged(object sender, EventArgs e)
         {
             IsDirty = true;

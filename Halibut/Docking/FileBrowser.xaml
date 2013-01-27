@@ -9,9 +9,9 @@
             <MenuItem Header="Open With..."></MenuItem>
             <Separator></Separator>
             <MenuItem Header="Cut"></MenuItem>
-            <MenuItem Header="Copy"></MenuItem>
+            <MenuItem Header="Copy" Click="contextMenuCopyClick"></MenuItem>
+            <MenuItem Header="Delete" Click="contextMenuDeleteClicked"></MenuItem>
             <MenuItem Header="Rename"></MenuItem>
-            <MenuItem Header="Delete"></MenuItem>
             <Separator></Separator>
             <MenuItem Header="View in Explorer" Click="contextMenuViewInExplorerClick"></MenuItem>
         </ContextMenu>

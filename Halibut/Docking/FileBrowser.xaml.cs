@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -151,6 +152,24 @@ namespace Halibut.Docking
                 Process.Start(file);
             else
                 Process.Start("explorer.exe", "/Select, " + file);
+        }
+
+        private void contextMenuDeleteClicked(object sender, RoutedEventArgs e)
+        {
+            var node = fileTree.SelectedItem as TreeViewItem;
+            string file = node.Tag as string;
+            if (MessageBox.Show("Are you sure you want to permenately delete " + Path.GetFileName(file) +
+                "?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                File.Delete(file);
+        }
+
+        private void contextMenuCopyClick(object sender, RoutedEventArgs e)
+        {
+            var node = fileTree.SelectedItem as TreeViewItem;
+            string file = node.Tag as string;
+            var collection = new StringCollection();
+            collection.Add(file);
+            Clipboard.SetFileDropList(collection);
         }
 
         private void fileTree_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)

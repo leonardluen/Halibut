@@ -263,7 +263,7 @@ namespace Halibut
                                     ErrorWindow.Show(dockingManager, AnchorStyle.Bottom);
                             }
                             if (callback != null)
-                                callback(success);
+                                callback(!success);
                             FileBrowser.DisableUpdates = false;
                             FileBrowser.RepopulateContents();
                         }));

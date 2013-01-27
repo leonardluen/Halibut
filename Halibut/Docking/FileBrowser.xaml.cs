@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -127,6 +128,8 @@ namespace Halibut.Docking
             });
             TreeViewItem item = new TreeViewItem();
             item.Header = panel;
+            item.Tag = name;
+            item.ContextMenu = (ContextMenu)Resources["directoryContextMenu"];
             return item;
         }
 
@@ -138,6 +141,31 @@ namespace Halibut.Docking
         private void contextMenuOpenClick(object sender, RoutedEventArgs e)
         {
             
+        }
+
+        private void contextMenuViewInExplorerClick(object sender, RoutedEventArgs e)
+        {
+            var node = fileTree.SelectedItem as TreeViewItem;
+            string file = node.Tag as string;
+            if (Directory.Exists(file))
+                Process.Start(file);
+            else
+                Process.Start("explorer.exe", "/Select, " + file);
+        }
+
+        private void fileTree_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var node = VisualUpwardSearch(e.Source as DependencyObject);
+            if (node != null)
+                node.Focus();
+        }
+
+        static TreeViewItem VisualUpwardSearch(DependencyObject source)
+        {
+            while (source != null && !(source is TreeViewItem))
+                source = VisualTreeHelper.GetParent(source);
+
+            return source as TreeViewItem;
         }
     }
 }

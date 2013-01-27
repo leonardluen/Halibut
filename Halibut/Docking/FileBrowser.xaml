@@ -12,9 +12,14 @@
             <MenuItem Header="Copy"></MenuItem>
             <MenuItem Header="Rename"></MenuItem>
             <MenuItem Header="Delete"></MenuItem>
+            <Separator></Separator>
+            <MenuItem Header="View in Explorer" Click="contextMenuViewInExplorerClick"></MenuItem>
+        </ContextMenu>
+        <ContextMenu x:Key="directoryContextMenu" x:Name="directoryContextMenu">
+            <MenuItem Header="View in Explorer" Click="contextMenuViewInExplorerClick"></MenuItem>
         </ContextMenu>
     </AvalonDock:DockableContent.Resources>
     <Grid>
-        <TreeView x:Name="fileTree"></TreeView>
+        <TreeView x:Name="fileTree" PreviewMouseRightButtonDown="fileTree_PreviewMouseRightButtonDown"></TreeView>
     </Grid>
 </AvalonDock:DockableContent>

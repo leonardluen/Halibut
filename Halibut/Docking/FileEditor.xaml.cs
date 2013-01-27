@@ -98,6 +98,9 @@ namespace Halibut.Docking
         void textEditor_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             isCtrlPressed = e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl;
+            e.Handled = IsDisabled;
+            if (IsDisabled)
+                MessageBox.Show("Code changes are not permitted while debugging.");
         }
 
         void textEditor_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -132,14 +135,15 @@ namespace Halibut.Docking
             Title = ObjectName;
         }
 
+        private bool IsDisabled = false;
         public void Disable()
         {
-            textEditor.IsEnabled = false;
+            IsDisabled = true;
         }
 
         public void Enable()
         {
-            textEditor.IsEnabled = true;
+            IsDisabled = false;
         }
 
         private void textEditor_TextChanged(object sender, EventArgs e)

@@ -130,6 +130,14 @@ namespace Halibut
 
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
+            if (Debugger != null)
+            {
+                if (MessageBox.Show("Are you sure you want to exit and stop debugging?", "Exit while debugging",
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                    return;
+                else
+                    Debugger.Kill();
+            }
             var dirtiedWindows = new List<IDirtiedWindow>();
             foreach (IDirtiedWindow item in dockingManager.DockableContents.Where(d => d is IDirtiedWindow))
             {

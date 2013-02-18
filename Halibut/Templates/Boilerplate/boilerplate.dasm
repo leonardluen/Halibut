@@ -34,13 +34,12 @@ init_devices:
     SET PC, .loop
     
 ; Print the string in [A] to X,Y
+; Preserves A, sets x and y to location of next character
 print_string:
     SET PUSH, A
-    SET PUSH, X
-    SET PUSH, Y
     MUL Y, 32
     ADD X, Y
-    ADD X, 0x8000
+    ADD X, screen_map
 .loop:
     IFE [A], 0
         SET PC, .return
@@ -51,19 +50,22 @@ print_string:
     ADD A, 1
     SET PC, .loop
 .return:
-    SET Y, POP
-    SET X, POP
+    SUB X, screen_map
+    SET Y, X
+    DIV Y,32
+    MOD X,32
     SET A, POP
     SET PC, POP
-    
+
 ; Writes A to X,Y in hex
+; Preserves A, sets x and y to location of next character
 print_hex:
     SET PUSH, A
     SET PUSH, X
     SET PUSH, Y
     MUL Y, 32
     ADD X, Y
-    ADD X, 0x8000
+    ADD X, screen_map
 .loop:
     SET Y, A
     AND Y, 0xF000
@@ -80,41 +82,42 @@ print_hex:
         SET PC, .return
     SET PC, .loop
 .return:
-    SET Y, POP
-    SET X, POP
+    SUB X, screen_map
+    SET Y, X
+    DIV Y,32
+    MOD X,32
     SET A, POP
     SET PC, POP
-    
+
 ; Writes A to X,Y in decimal
+; Preserves A, sets x and y to location of next character
 print_dec:
     SET PUSH, A
-    SET PUSH, X
-    SET PUSH, Y
     MUL Y, 32
     ADD X, Y
-    ADD X, 0x8000
-    IFG X, 9
-        ADD X, 1
-    IFG X, 99
-        ADD X, 1
-    IFG X, 999
-        ADD X, 1
-    IFG X, 9999
-        ADD X, 1
+    ADD X, screen_map
+    set PUSH, 0
 .loop:
     SET Y, A
     MOD Y, 10
     ADD Y, '0'
     BOR Y, 0xF000
-    SET [X], Y
-    SUB X, 1
+    SET PUSH, Y
     DIV A, 10
-    IFE A, 0
+    IFN A,0
+        SET PC,.loop
+.display:
+    SET A,pop
+    IFE A,0
         SET PC, .return
-    SET PC, .loop
+    SET [X], A
+    ADD X, 1
+    set pc,.display
 .return:
-    SET Y, POP
-    SET X, POP
+    SUB X, screen_map
+    SET Y, X
+    DIV Y,32
+    MOD X,32
     SET A, POP
     SET PC, POP
     

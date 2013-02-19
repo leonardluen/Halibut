@@ -61,8 +61,6 @@ print_string:
 ; Preserves A, sets x and y to location of next character
 print_hex:
     SET PUSH, A
-    SET PUSH, X
-    SET PUSH, Y
     MUL Y, 32
     ADD X, Y
     ADD X, screen_map
@@ -73,7 +71,7 @@ print_hex:
     IFL Y, 10
         ADD Y, '0'
     IFL Y, 16
-        ADD Y, 'A'
+        ADD Y, 'A'-10
     BOR Y, 0xF000
     SET [X], Y
     ADD X, 1
